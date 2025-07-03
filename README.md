@@ -2,6 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+A WPF-based chatbot application using C# and ML.NET that learns from conversations, featuring a minimalist UI design and continuous learning capabilities through user interactions.
+
 ## BOOKMARKS
 - [Objective](#objective)
 - [Features](#key-features)

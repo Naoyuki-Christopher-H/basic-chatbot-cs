@@ -10,6 +10,7 @@ A WPF-based chatbot application using C# and ML.NET that learns from conversatio
 - [Installation](#installation-instructions)
 - [License](#license)
 - [References](#references)
+- [Disclaimer](#disclaimer)
 
 ## OBJECTIVE
 

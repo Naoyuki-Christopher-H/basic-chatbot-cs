@@ -16,7 +16,10 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <Border Grid.Row="0" CornerRadius="10" Background="#007AFF" Margin="0,0,0,10" Padding="15">
+        <Border Grid.Row="0" Background="#007AFF" Margin="0,0,0,10" Padding="15">
+            <Border.CornerRadius>
+                <CornerRadius TopLeft="10" TopRight="10" BottomLeft="10" BottomRight="10"/>
+            </Border.CornerRadius>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBlock Text="AI Chatbot" FontSize="18" FontWeight="SemiBold" Foreground="White"/>
                 <TextBlock x:Name="LearningStatus" Margin="10,0,0,0" FontSize="12" Foreground="#CCFFFFFF" VerticalAlignment="Center"/>
@@ -24,15 +27,21 @@
         </Border>
 
         <!-- Chat Display Area -->
-        <Border Grid.Row="1" CornerRadius="10" Background="White" Margin="0,0,0,10"
-                BorderThickness="1" BorderBrush="#E0E0E0">
+        <Border Grid.Row="1" Background="White" Margin="0,0,0,10" BorderThickness="1" BorderBrush="#E0E0E0">
+            <Border.CornerRadius>
+                <CornerRadius TopLeft="10" TopRight="10" BottomLeft="10" BottomRight="10"/>
+            </Border.CornerRadius>
             <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
                 <ItemsControl x:Name="ChatBox">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border CornerRadius="12" Padding="10" Margin="0,5"
-                                    Background="{Binding BackgroundColor}"
-                                    HorizontalAlignment="{Binding HorizontalAlignment}">
+                            <Border Padding="10" Margin="0,5" HorizontalAlignment="{Binding HorizontalAlignment}">
+                                <Border.Background>
+                                    <SolidColorBrush Color="{Binding BackgroundColor}"/>
+                                </Border.Background>
+                                <Border.CornerRadius>
+                                    <CornerRadius TopLeft="12" TopRight="12" BottomLeft="12" BottomRight="12"/>
+                                </Border.CornerRadius>
                                 <TextBlock Text="{Binding Text}" 
                                            FontSize="14" 
                                            TextWrapping="Wrap"
@@ -51,8 +60,10 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Wrapped TextBox in Border for CornerRadius -->
-            <Border Grid.Column="0" CornerRadius="20" Background="White" BorderBrush="#E0E0E0" BorderThickness="1">
+            <Border Grid.Column="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="1">
+                <Border.CornerRadius>
+                    <CornerRadius TopLeft="20" TopRight="20" BottomLeft="20" BottomRight="20"/>
+                </Border.CornerRadius>
                 <TextBox x:Name="InputTextBox" 
                          VerticalContentAlignment="Center"
                          Padding="10" FontSize="14"
@@ -61,8 +72,10 @@
                          KeyDown="InputTextBox_KeyDown"/>
             </Border>
 
-            <!-- Wrapped Button in Border for CornerRadius -->
-            <Border Grid.Column="1" CornerRadius="20" Background="#007AFF" Margin="10,0,0,0">
+            <Border Grid.Column="1" Background="#007AFF" Margin="10,0,0,0">
+                <Border.CornerRadius>
+                    <CornerRadius TopLeft="20" TopRight="20" BottomLeft="20" BottomRight="20"/>
+                </Border.CornerRadius>
                 <Button Content="Send" 
                         Padding="15,5"
                         Background="Transparent" 

@@ -1,5 +1,4 @@
-﻿using Microsoft.ML;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
@@ -11,31 +10,19 @@ namespace basic_chatbot_cs
 {
     public partial class MainWindow : Window
     {
-        private ChatTrainingService _trainingService;
-        private ChatHistory _chatHistory = new ChatHistory();
-        private string _messagesFilePath = "conversations.txt";
+        private readonly ChatTrainingService _trainingService;
+        private readonly ChatHistory _chatHistory = new ChatHistory();
+        private readonly string _messagesFilePath = "conversations.txt";
         private bool _isLearningMode = false;
         private string _lastUserInput = "";
 
         public MainWindow()
         {
             InitializeComponent();
-            InitializeServices();
+            _trainingService = new ChatTrainingService();
+            EnsureConversationFileExists();
             ChatBox.ItemsSource = _chatHistory.Messages;
             UpdateLearningStatus();
-        }
-
-        private void InitializeServices()
-        {
-            try
-            {
-                _trainingService = new ChatTrainingService();
-                EnsureConversationFileExists();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Initialization error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
         }
 
         private void EnsureConversationFileExists()
@@ -66,7 +53,6 @@ namespace basic_chatbot_cs
 
             if (_isLearningMode)
             {
-                // Teach the bot a new response
                 _trainingService.RetrainModel(_lastUserInput, userInput);
                 _chatHistory.AddMessage($"Learned: When you say '{_lastUserInput}', I'll respond '{userInput}'", false, "#34C759");
                 _isLearningMode = false;
@@ -74,12 +60,10 @@ namespace basic_chatbot_cs
             }
             else
             {
-                // Normal conversation mode
                 _lastUserInput = userInput;
                 string response = _trainingService.PredictResponse(userInput);
 
-                // If confidence is low, ask to teach
-                if (response.Contains("I'm still learning") || response.Contains("I don't understand"))
+                if (response.Contains("I'm still learning") || response.Contains("I didn't understand"))
                 {
                     response += "\n\nCan you teach me how to respond? Type your preferred response.";
                     _isLearningMode = true;
@@ -127,8 +111,8 @@ namespace basic_chatbot_cs
 
     public class ChatMessage
     {
-        public string Text { get; set; }
-        public Brush BackgroundColor { get; set; }
+        public string Text { get; set; } = string.Empty;
+        public Color BackgroundColor { get; set; }
         public Brush TextColor { get; set; } = Brushes.Black;
         public HorizontalAlignment HorizontalAlignment { get; set; }
     }
@@ -137,7 +121,7 @@ namespace basic_chatbot_cs
     {
         public ObservableCollection<ChatMessage> Messages { get; } = new ObservableCollection<ChatMessage>();
 
-        public void AddMessage(string text, bool isUserMessage, string customColor = null)
+        public void AddMessage(string text, bool isUserMessage, string? customColor = null)
         {
             var message = new ChatMessage
             {
@@ -147,13 +131,13 @@ namespace basic_chatbot_cs
 
             if (!string.IsNullOrEmpty(customColor))
             {
-                message.BackgroundColor = (Brush)new BrushConverter().ConvertFromString(customColor);
+                message.BackgroundColor = (Color)ColorConverter.ConvertFromString(customColor);
             }
             else
             {
                 message.BackgroundColor = isUserMessage ?
-                    new SolidColorBrush(Color.FromRgb(0, 122, 255)) :
-                    new SolidColorBrush(Color.FromRgb(229, 229, 234));
+                    Color.FromRgb(0, 122, 255) :
+                    Color.FromRgb(229, 229, 234);
             }
 
             Messages.Add(message);

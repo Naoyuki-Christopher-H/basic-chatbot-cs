@@ -2,18 +2,18 @@
 
 namespace basic_chatbot_cs
 {
-    public class ChatMessageModel
+    public class ChatMessageData
     {
         [LoadColumn(0)]
-        public string UserInput { get; set; }
+        public string? UserInput { get; set; }
 
         [LoadColumn(1)]
-        public string BotResponse { get; set; }
+        public string? BotResponse { get; set; }
     }
 
-    public class ChatPrediction
+    public class ChatMessagePrediction
     {
         [ColumnName("PredictedLabel")]
-        public string BotResponse { get; set; }
+        public string? Response { get; set; }
     }
 }

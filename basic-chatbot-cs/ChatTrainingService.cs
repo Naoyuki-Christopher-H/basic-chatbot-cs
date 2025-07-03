@@ -1,5 +1,5 @@
 ﻿using Microsoft.ML;
-using Microsoft.ML.Data;
+using Microsoft.ML.Trainers;
 using System;
 using System.IO;
 
@@ -7,10 +7,10 @@ namespace basic_chatbot_cs
 {
     public class ChatTrainingService
     {
-        private MLContext _mlContext;
-        private ITransformer _trainedModel;
-        private string _modelPath = "chatModel.zip";
-        private string _trainingDataPath = "trainingData.csv";
+        private readonly MLContext _mlContext;
+        private ITransformer? _trainedModel;
+        private readonly string _modelPath = "chatModel.zip";
+        private readonly string _trainingDataPath = "trainingData.csv";
 
         public ChatTrainingService()
         {
@@ -23,7 +23,6 @@ namespace basic_chatbot_cs
         {
             if (!File.Exists(_trainingDataPath))
             {
-                // Create basic training data if file doesn't exist
                 string[] trainingData = {
                     "UserInput,BotResponse",
                     "hello,Hi there! How can I help you today?",
@@ -46,66 +45,49 @@ namespace basic_chatbot_cs
         {
             if (File.Exists(_modelPath))
             {
-                // Load existing model
                 _trainedModel = _mlContext.Model.Load(_modelPath, out _);
                 return;
             }
 
-            // Load training data
-            IDataView trainingData = _mlContext.Data.LoadFromTextFile<ChatMessageModel>(
+            IDataView trainingData = _mlContext.Data.LoadFromTextFile<ChatMessageData>(
                 _trainingDataPath,
                 hasHeader: true,
                 separatorChar: ',');
 
-            // Data process pipeline
-            var dataProcessPipeline = _mlContext.Transforms.Conversion.MapValueToKey("Label", nameof(ChatMessageModel.BotResponse))
-                .Append(_mlContext.Transforms.Text.FeaturizeText("Features", nameof(ChatMessageModel.UserInput)));
+            var dataProcessPipeline = _mlContext.Transforms.Conversion.MapValueToKey(
+                    outputColumnName: "Label",
+                    inputColumnName: nameof(ChatMessageData.BotResponse))
+                .Append(_mlContext.Transforms.Text.FeaturizeText(
+                    outputColumnName: "Features",
+                    inputColumnName: nameof(ChatMessageData.UserInput)));
 
-            // Trainer
-            var trainer = _mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy("Label", "Features");
+            var trainer = _mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy(
+                labelColumnName: "Label",
+                featureColumnName: "Features");
+
             var trainingPipeline = dataProcessPipeline.Append(trainer)
-                .Append(_mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
+                .Append(_mlContext.Transforms.Conversion.MapKeyToValue(
+                    outputColumnName: "PredictedLabel"));
 
-            // Train the model
             _trainedModel = trainingPipeline.Fit(trainingData);
-
-            // Save the model
             _mlContext.Model.Save(_trainedModel, trainingData.Schema, _modelPath);
         }
 
         public void RetrainModel(string newUserInput, string newBotResponse)
         {
-            // Append new training data
             File.AppendAllText(_trainingDataPath, $"\n{newUserInput},{newBotResponse}");
-
-            // Retrain the model
             TrainModel();
         }
 
         public string PredictResponse(string userInput)
         {
-            if (_trainedModel == null)
+            if (_trainedModel == null || string.IsNullOrEmpty(userInput))
                 return "I'm still learning. Please try again.";
 
-            var predictionEngine = _mlContext.Model.CreatePredictionEngine<ChatMessageModel, ChatPrediction>(_trainedModel);
-            var prediction = predictionEngine.Predict(new ChatMessageModel { UserInput = userInput });
+            var predictionEngine = _mlContext.Model.CreatePredictionEngine<ChatMessageData, ChatMessagePrediction>(_trainedModel);
+            var prediction = predictionEngine.Predict(new ChatMessageData { UserInput = userInput });
 
-            return prediction.BotResponse;
+            return prediction.Response ?? "I didn't understand that. Could you rephrase?";
         }
-    }
-
-    public class ChatMessageModel
-    {
-        [LoadColumn(0)]
-        public string UserInput { get; set; }
-
-        [LoadColumn(1)]
-        public string BotResponse { get; set; }
-    }
-
-    public class ChatPrediction
-    {
-        [ColumnName("PredictedLabel")]
-        public string BotResponse { get; set; }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.ML;
-using Microsoft.ML.Trainers;
+using Microsoft.ML.Data;
 using System;
-using System.Data;
 using System.IO;
 
 namespace basic_chatbot_cs
@@ -93,5 +92,20 @@ namespace basic_chatbot_cs
 
             return prediction.BotResponse;
         }
+    }
+
+    public class ChatMessageModel
+    {
+        [LoadColumn(0)]
+        public string UserInput { get; set; }
+
+        [LoadColumn(1)]
+        public string BotResponse { get; set; }
+    }
+
+    public class ChatPrediction
+    {
+        [ColumnName("PredictedLabel")]
+        public string BotResponse { get; set; }
     }
 }

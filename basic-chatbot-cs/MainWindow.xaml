@@ -26,31 +26,34 @@
             </StackPanel>
         </Border>
 
-        <!-- Chat Display Area -->
+        <!-- Chat Display Area - Changed to ListBox for better scrolling -->
         <Border Grid.Row="1" Background="White" Margin="0,0,0,10" BorderThickness="1" BorderBrush="#E0E0E0">
             <Border.CornerRadius>
                 <CornerRadius TopLeft="10" TopRight="10" BottomLeft="10" BottomRight="10"/>
             </Border.CornerRadius>
-            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
-                <ItemsControl x:Name="ChatBox">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Padding="10" Margin="0,5" HorizontalAlignment="{Binding HorizontalAlignment}">
-                                <Border.Background>
-                                    <SolidColorBrush Color="{Binding BackgroundColor}"/>
-                                </Border.Background>
-                                <Border.CornerRadius>
-                                    <CornerRadius TopLeft="12" TopRight="12" BottomLeft="12" BottomRight="12"/>
-                                </Border.CornerRadius>
-                                <TextBlock Text="{Binding Text}" 
-                                           FontSize="14" 
-                                           TextWrapping="Wrap"
-                                           Foreground="{Binding TextColor}"/>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
+            <ListBox x:Name="ChatBox" 
+                     Background="Transparent" 
+                     BorderThickness="0"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     ItemsSource="{Binding Messages}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Padding="10" Margin="0,5" HorizontalAlignment="{Binding HorizontalAlignment}">
+                            <Border.Background>
+                                <SolidColorBrush Color="{Binding BackgroundColor}"/>
+                            </Border.Background>
+                            <Border.CornerRadius>
+                                <CornerRadius TopLeft="12" TopRight="12" BottomLeft="12" BottomRight="12"/>
+                            </Border.CornerRadius>
+                            <TextBlock Text="{Binding Text}" 
+                                       FontSize="14" 
+                                       TextWrapping="Wrap"
+                                       Foreground="{Binding TextColor}"/>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </Border>
 
         <!-- Input Area -->

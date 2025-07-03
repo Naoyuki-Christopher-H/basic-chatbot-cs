@@ -97,9 +97,7 @@ namespace basic_chatbot_cs
         {
             if (ChatBox.Items.Count > 0)
             {
-                var border = (Border)VisualTreeHelper.GetChild(ChatBox, 0);
-                var scrollViewer = (ScrollViewer)VisualTreeHelper.GetChild(border, 0);
-                scrollViewer.ScrollToBottom();
+                ChatBox.ScrollIntoView(ChatBox.Items[ChatBox.Items.Count - 1]);
             }
         }
 

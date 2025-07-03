@@ -1,0 +1,69 @@
+﻿<Window x:Class="basic_chatbot_cs.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:basic_chatbot_cs"
+        mc:Ignorable="d"
+        Title="AI Chatbot" Height="650" Width="450"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F7">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" CornerRadius="10" Background="#007AFF" Margin="0,0,0,10" Padding="15">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="AI Chatbot" FontSize="18" FontWeight="SemiBold" Foreground="White"/>
+                <TextBlock x:Name="LearningStatus" Margin="10,0,0,0" FontSize="12" Foreground="#CCFFFFFF" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Chat Display Area -->
+        <Border Grid.Row="1" CornerRadius="10" Background="White" Margin="0,0,0,10"
+                BorderThickness="1" BorderBrush="#E0E0E0">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
+                <ItemsControl x:Name="ChatBox">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border CornerRadius="12" Padding="10" Margin="0,5"
+                                    Background="{Binding BackgroundColor}"
+                                    HorizontalAlignment="{Binding HorizontalAlignment}">
+                                <TextBlock Text="{Binding Text}" 
+                                           FontSize="14" 
+                                           TextWrapping="Wrap"
+                                           Foreground="{Binding TextColor}"/>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Input Area -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBox x:Name="InputTextBox" Grid.Column="0" 
+                     VerticalContentAlignment="Center"
+                     Padding="10" FontSize="14"
+                     Background="White" BorderBrush="#E0E0E0"
+                     BorderThickness="1" CornerRadius="20"
+                     KeyDown="InputTextBox_KeyDown"/>
+
+            <Button Grid.Column="1" Content="Send" 
+                    Margin="10,0,0,0" Padding="15,5"
+                    Background="#007AFF" Foreground="White"
+                    BorderThickness="0" CornerRadius="20"
+                    FontWeight="Medium" FontSize="14"
+                    Click="SendButton_Click"/>
+        </Grid>
+    </Grid>
+</Window>

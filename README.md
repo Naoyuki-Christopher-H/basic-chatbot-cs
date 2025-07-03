@@ -76,7 +76,7 @@ Achieved functional chatbot with learning capabilities.
 
 License Name: MIT License  
 Role: Permits free use, modification, and distribution with attribution.  
-[FULL LICENSE](LICENSE)
+License File: [FULL LICENSE](LICENSE)
 
 ## REFERENCES
 
